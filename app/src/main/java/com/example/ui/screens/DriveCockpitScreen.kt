@@ -73,6 +73,7 @@ import com.example.domain.TelematicsConstants
 import com.example.model.DrivingEventType
 import com.example.model.QuickDebriefData
 import com.example.model.TurnSignal
+import com.example.ui.components.CarPocketCoinVaultIcon
 import com.example.ui.components.CctvEnforcementMapView
 import com.example.ui.components.CctvRadarCard
 import com.example.ui.components.DrivingHabitTrackerCard
@@ -537,7 +538,7 @@ private fun FuelEconomyCurrencyBadge(
 ) {
   Surface(
     modifier = Modifier.fillMaxWidth(),
-    shape = RoundedCornerShape(14.dp),
+    shape = RoundedCornerShape(18.dp),
     color = LightSurface,
     border = BorderStroke(1.dp, LightCardBorder),
     shadowElevation = 1.dp
@@ -545,9 +546,8 @@ private fun FuelEconomyCurrencyBadge(
     Column(
       modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 12.dp, vertical = 10.dp)
+        .padding(horizontal = 14.dp, vertical = 12.dp)
     ) {
-      // 1행: 가계부형 연비 코칭 라벨 ── 실시간 절약 뱃지
       Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -557,42 +557,62 @@ private fun FuelEconomyCurrencyBadge(
           modifier = Modifier.weight(1f, fill = false),
           verticalAlignment = Alignment.CenterVertically
         ) {
-          Text(
-            text = "실시간 연비 가계부",
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = TextPrimary,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = TextStyle(
-              platformStyle = @Suppress("DEPRECATION") PlatformTextStyle(includeFontPadding = false)
+          CarPocketCoinVaultIcon(size = 36.dp)
+          Spacer(modifier = Modifier.width(10.dp))
+          Column {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+              Text(
+                text = "카포켓 연비 저금통",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(
+                  platformStyle = @Suppress("DEPRECATION") PlatformTextStyle(includeFontPadding = false)
+                )
+              )
+              Spacer(modifier = Modifier.width(6.dp))
+              Text(
+                text = if (isDriving) "기름값 아끼는 중" else "주행 대기",
+                fontSize = 10.sp,
+                color = if (isDriving) EmeraldSafe else TextMuted,
+                maxLines = 1,
+                softWrap = false,
+                style = TextStyle(
+                  platformStyle = @Suppress("DEPRECATION") PlatformTextStyle(includeFontPadding = false)
+                )
+              )
+            }
+            Spacer(modifier = Modifier.height(2.dp))
+            val comparisonText = TelematicsConstants.formatFuelSavingComparison(liveFuelSavedWon)
+            Text(
+              text = comparisonText,
+              fontSize = 12.sp,
+              color = TextSecondary,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+              style = TextStyle(
+                platformStyle = @Suppress("DEPRECATION") PlatformTextStyle(includeFontPadding = false)
+              )
             )
-          )
-          Spacer(modifier = Modifier.width(6.dp))
-          Text(
-            text = if (isDriving) "기름값 아끼는 중" else "주행 대기",
-            fontSize = 10.sp,
-            color = if (isDriving) EmeraldSafe else TextMuted,
-            maxLines = 1,
-            softWrap = false,
-            style = TextStyle(
-              platformStyle = @Suppress("DEPRECATION") PlatformTextStyle(includeFontPadding = false)
-            )
-          )
+          }
         }
 
-        // 절약 요약 뱃지 (Pill)
+        Spacer(modifier = Modifier.width(8.dp))
+
+        // 저금 요약 뱃지 (Pill)
         Box(
           modifier = Modifier
-            .height(26.dp)
-            .clip(RoundedCornerShape(6.dp))
-            .background(if (liveFuelSavedWon > 0) EmeraldGlow.copy(alpha = 0.5f) else LightSurfaceSubtle)
-            .border(1.dp, if (liveFuelSavedWon > 0) EmeraldSafe.copy(alpha = 0.4f) else LightCardBorder, RoundedCornerShape(6.dp))
-            .padding(horizontal = 8.dp),
+            .height(28.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(if (liveFuelSavedWon > 0) EmeraldGlow else LightSurfaceSubtle)
+            .border(1.dp, if (liveFuelSavedWon > 0) EmeraldSafe.copy(alpha = 0.4f) else LightCardBorder, RoundedCornerShape(8.dp))
+            .padding(horizontal = 9.dp),
           contentAlignment = Alignment.Center
         ) {
           Text(
-            text = if (liveFuelSavedWon > 0) "+${liveFuelSavedWon}원 절약" else "0원 절약",
+            text = if (liveFuelSavedWon > 0) "+${liveFuelSavedWon}원 저금" else "0원 저금",
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
             color = if (liveFuelSavedWon > 0) EmeraldSafe else TextMuted,
@@ -605,23 +625,7 @@ private fun FuelEconomyCurrencyBadge(
         }
       }
 
-      Spacer(modifier = Modifier.height(6.dp))
-
-      // 2행: 토스 스타일 체감 문구
-      val comparisonText = TelematicsConstants.formatFuelSavingComparison(liveFuelSavedWon)
-      Text(
-        text = comparisonText,
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Medium,
-        color = TextSecondary,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        style = TextStyle(
-          platformStyle = @Suppress("DEPRECATION") PlatformTextStyle(includeFontPadding = false)
-        )
-      )
-
-      // 3행: 급조작 비용 알림 (발생 시 즉각 애니메이션 표시)
+      // 급조작 비용 알림 (발생 시 즉각 애니메이션 표시)
       AnimatedVisibility(
         visible = recentFloatingMessage != null || liveAggressiveCostWon > 0,
         enter = fadeIn() + slideInVertically(),

@@ -58,6 +58,9 @@ import androidx.compose.ui.unit.sp
 import com.example.model.CommuteChallenge
 import com.example.model.InsuranceCompanyQuote
 import com.example.model.IssuedCoupon
+import com.example.ui.components.CarPocketCoinVaultIcon
+import com.example.ui.components.DuotoneRewardBadge
+import com.example.ui.components.RewardArtworkType
 import com.example.ui.components.ModernCouponBarcodeDialog
 import com.example.ui.components.ModernFeedbackDialog
 import com.example.ui.components.ModernToastPill
@@ -638,19 +641,11 @@ private fun CommuteChallengePromotionCard() {
       modifier = Modifier.padding(14.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Box(
-        modifier = Modifier
-          .size(42.dp)
-          .clip(CircleShape)
-          .background(GoldBadgeBg),
-        contentAlignment = Alignment.Center
-      ) {
-        Icon(Icons.Default.EmojiEvents, contentDescription = null, tint = GoldStar, modifier = Modifier.size(22.dp))
-      }
+      CarPocketCoinVaultIcon(size = 42.dp)
       Spacer(modifier = Modifier.width(12.dp))
       Column(modifier = Modifier.weight(1f)) {
         Text(
-          text = "출퇴근 안전 마이크로 리워드 🎁",
+          text = "출퇴근 안전 마이크로 리워드",
           fontSize = 13.sp,
           fontWeight = FontWeight.Bold,
           color = TextPrimary,
@@ -674,6 +669,14 @@ private fun CommuteChallengeCard(
   challenge: CommuteChallenge,
   onClaim: () -> Unit
 ) {
+  val artworkType = when {
+    challenge.rewardTag.contains("주유") || challenge.iconEmoji.contains("⛽") -> RewardArtworkType.FUEL
+    challenge.rewardTag.contains("세차") || challenge.iconEmoji.contains("🧼") -> RewardArtworkType.CAR_WASH
+    challenge.rewardTag.contains("음료") || challenge.rewardTag.contains("카페") || challenge.iconEmoji.contains("☕") -> RewardArtworkType.COFFEE
+    challenge.rewardTag.contains("충전") || challenge.iconEmoji.contains("⚡") -> RewardArtworkType.EV_CHARGING
+    else -> RewardArtworkType.WELCOME
+  }
+
   Surface(
     modifier = Modifier.fillMaxWidth(),
     shape = RoundedCornerShape(16.dp),
@@ -692,8 +695,8 @@ private fun CommuteChallengeCard(
           modifier = Modifier.weight(1f, fill = false),
           verticalAlignment = Alignment.CenterVertically
         ) {
-          Text(text = challenge.iconEmoji, fontSize = 16.sp)
-          Spacer(modifier = Modifier.width(6.dp))
+          DuotoneRewardBadge(type = artworkType, size = 30.dp, iconSize = 16.dp)
+          Spacer(modifier = Modifier.width(8.dp))
           Text(
             text = challenge.title,
             fontSize = 13.sp,
@@ -879,16 +882,29 @@ private fun MyCouponWalletCard(
               horizontalArrangement = Arrangement.SpaceBetween,
               verticalAlignment = Alignment.CenterVertically
             ) {
-              Text(
-                text = "${coupon.iconEmoji} ${coupon.title}",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                color = if (coupon.isUsed) TextMuted else TextPrimary,
+              val couponArt = when {
+                coupon.title.contains("주유") -> RewardArtworkType.FUEL
+                coupon.title.contains("세차") -> RewardArtworkType.CAR_WASH
+                coupon.title.contains("아메리카노") || coupon.title.contains("스타벅스") || coupon.title.contains("커피") -> RewardArtworkType.COFFEE
+                coupon.title.contains("충전") -> RewardArtworkType.EV_CHARGING
+                else -> RewardArtworkType.WELCOME
+              }
+              Row(
                 modifier = Modifier.weight(1f, fill = false),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = NoFontPaddingTextStyle
-              )
+                verticalAlignment = Alignment.CenterVertically
+              ) {
+                DuotoneRewardBadge(type = couponArt, size = 26.dp, iconSize = 14.dp)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                  text = coupon.title,
+                  fontSize = 12.sp,
+                  fontWeight = FontWeight.Bold,
+                  color = if (coupon.isUsed) TextMuted else TextPrimary,
+                  maxLines = 1,
+                  overflow = TextOverflow.Ellipsis,
+                  style = NoFontPaddingTextStyle
+                )
+              }
               Text(
                 text = coupon.expiryDate,
                 fontSize = 10.sp,

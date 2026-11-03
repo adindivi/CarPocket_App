@@ -2,40 +2,75 @@ package com.example.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Modern Fintech Neutral & Daylight Palette (One UI & High-Readability Standard)
-val LightAppBg = Color(0xFFF8FAFC)            // Soft Clean Slate Tint
-val LightSurface = Color(0xFFFFFFFF)          // Pure White Card Surface
-val LightSurfaceElevated = Color(0xFFFFFFFF)
-val LightSurfaceSubtle = Color(0xFFF1F5F9)    // Neutral Capsule & Chip Fill
-val LightSurfaceAccentTint = Color(0xFFEFF6FF)// Subtle Blue Glow
-val LightCardBorder = Color(0xFFE2E8F0)       // 1px Neutral Outline
-val LightDivider = Color(0xFFE2E8F0)
+/**
+ * CarPocket Modern Fintech Neutral & Human-Centric Design System
+ * Inspired by Toss & Apple CarPlay HIG.
+ * Zero cyber-neon glow, maximum readability, elegant slate typography.
+ */
 
-// Semantic aliases
-val DarkNavyBg = LightAppBg
-val DarkSurface = LightSurface
-val DarkSurfaceElevated = LightSurfaceElevated
-val DarkSurfaceCard = LightSurfaceSubtle
-val DarkCardBorder = LightCardBorder
-val DarkDivider = LightDivider
+// 1. Foundation Neutral Backgrounds & Cards
+val SlateBg = Color(0xFFF8FAFC)                 // Clean Daylight Slate Canvas
+val SlateCard = Color(0xFFFFFFFF)               // Pure White Card Surface
+val SlateCardElevated = Color(0xFFFFFFFF)
+val SlatePill = Color(0xFFF1F5F9)               // Neutral Pill & Badge Capsule
+val SlateBorder = Color(0xFFE2E8F0)             // 1px Subtle Card Outline
+val SlateDivider = Color(0xFFE2E8F0)            // 1px Separation Line
 
-// Single Primary Accent: Electric Cobalt Blue (Point Color)
-val CyanNeon = Color(0xFF2563EB)              // Primary Brand Accent (Fintech Blue)
-val CyanGlow = Color(0xFFEFF6FF)              // Very Soft Blue Tint
-val EmeraldSafe = Color(0xFF059669)           // Subdued Safe Green
-val EmeraldGlow = Color(0xFFECFDF5)           // Soft Mint Tint
-val AmberWarning = Color(0xFFD97706)          // Restrained Warning Amber
-val AmberGlow = Color(0xFFFFFBEB)             // Soft Amber Tint
-val CrimsonAlert = Color(0xFFDC2626)          // Clear Alert Red
-val CrimsonGlow = Color(0xFFFEF2F2)           // Soft Red Tint
-val GoldStar = Color(0xFFB45309)              // Amber Neutral
-val GoldBadgeBg = Color(0xFFF1F5F9)
-val PurpleAccent = Color(0xFF4F46E5)
-val PurpleGlow = Color(0xFFEEF2FF)
+// 2. Primary Brand Accent: Toss Signature Blue
+val TossBlue = Color(0xFF3182F6)                // High-Trust Fintech Hero Blue
+val TossBlueDark = Color(0xFF1B64DA)            // Active/Pressed State Blue
+val TossBlueLight = Color(0xFFE8F3FF)           // 10% Soft Blue Tint Capsule
 
-// Typography Standards
-val TextPrimary = Color(0xFF0F172A)           // Deep Slate Black (Headline / Main Numbers)
-val TextSecondary = Color(0xFF475569)         // Slate Gray (Body & Sub-labels)
-val TextMuted = Color(0xFF64748B)             // Cool Slate (Caption / Timestamp)
-val TextOnAccent = Color(0xFFFFFFFF)          // High-Contrast White
+// 3. Status Accents (Restrained & Functional)
+val SafeGreen = Color(0xFF10B981)               // Forest Mint (Safe Driving / Points)
+val SafeGreenLight = Color(0xFFECFDF5)          // 10% Mint Tint Capsule
+val WarningAmber = Color(0xFFF59E0B)            // Warm Safety Amber
+val WarningAmberLight = Color(0xFFFFFBEB)       // 10% Amber Tint Capsule
+val AlertCrimson = Color(0xFFEF4444)            // Clear Caution Red
+val AlertCrimsonLight = Color(0xFFFEF2F2)       // 10% Red Tint Capsule
 
+// 4. CarPocket Metallic & Wealth Accents
+val GoldCoin = Color(0xFFF59E0B)                // Savings Coin Accent
+val GoldCoinBg = Color(0xFFFEF3C7)              // Coin Capsule Background
+val PurpleIndigo = Color(0xFF4F46E5)            // AI Feature Accent
+val PurpleIndigoLight = Color(0xFFEEF2FF)
+
+// 5. Typography Standards (WCAG AAA Contrast)
+val SlateDark = Color(0xFF0F172A)               // Slate 900: Headline & Large Numbers
+val SlateBody = Color(0xFF334155)               // Slate 700: Body & Informational Text
+val SlateMuted = Color(0xFF64748B)              // Slate 500: Metadata & Sub-labels
+val SlateSubtle = Color(0xFF94A3B8)             // Slate 400: Icons & Disabled Text
+val TextOnAccent = Color(0xFFFFFFFF)            // Pure High-Contrast White
+
+// 6. Backward Compatibility Aliases for Seamless Compilation
+val LightAppBg = SlateBg
+val LightSurface = SlateCard
+val LightSurfaceElevated = SlateCardElevated
+val LightSurfaceSubtle = SlatePill
+val LightSurfaceAccentTint = TossBlueLight
+val LightCardBorder = SlateBorder
+val LightDivider = SlateDivider
+
+val DarkNavyBg = SlateBg
+val DarkSurface = SlateCard
+val DarkSurfaceElevated = SlateCardElevated
+val DarkSurfaceCard = SlatePill
+val DarkCardBorder = SlateBorder
+val DarkDivider = SlateDivider
+
+val CyanNeon = TossBlue
+val CyanGlow = TossBlueLight
+val EmeraldSafe = SafeGreen
+val EmeraldGlow = SafeGreenLight
+val AmberWarning = WarningAmber
+val AmberGlow = WarningAmberLight
+val CrimsonAlert = AlertCrimson
+val CrimsonGlow = AlertCrimsonLight
+val GoldStar = GoldCoin
+val GoldBadgeBg = GoldCoinBg
+val PurpleAccent = PurpleIndigo
+val PurpleGlow = PurpleIndigoLight
+
+val TextPrimary = SlateDark
+val TextSecondary = SlateBody
+val TextMuted = SlateMuted

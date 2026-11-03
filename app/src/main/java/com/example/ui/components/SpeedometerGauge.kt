@@ -141,7 +141,7 @@ fun SpeedometerGauge(
             }
           }
 
-          // Inner Speed & Unit Display
+          // Inner Speed & Unit Display (Genesis & Apple CarPlay Clean Dial)
           Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -150,18 +150,18 @@ fun SpeedometerGauge(
               text = "$speed",
               fontSize = speedFontSize,
               fontWeight = FontWeight.Black,
-              fontFamily = FontFamily.Monospace,
               color = if (isOverSpeed) CrimsonAlert else TextPrimary,
-              letterSpacing = (-1).sp,
+              letterSpacing = (-1.5).sp,
               style = TextStyle(
                 platformStyle = @Suppress("DEPRECATION") PlatformTextStyle(includeFontPadding = false)
               )
             )
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
               text = "km/h",
               fontSize = 12.sp,
-              fontWeight = FontWeight.Medium,
-              color = TextSecondary,
+              fontWeight = FontWeight.SemiBold,
+              color = TextMuted,
               style = TextStyle(
                 platformStyle = @Suppress("DEPRECATION") PlatformTextStyle(includeFontPadding = false)
               )
