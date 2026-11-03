@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Speed Arc -->
+    <path
+        android:strokeColor="#1C385E"
+        android:strokeWidth="3.5"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round"
+        android:pathData="M 30,68 A 32,32 0 1,1 78,68" />
+    <path
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="3.5"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round"
+        android:pathData="M 30,68 A 32,32 0 0,1 68,26" />
+    <!-- Shield Outline -->
+    <path
+        android:fillColor="#1500E5FF"
+        android:strokeColor="#00E676"
+        android:strokeWidth="2.5"
+        android:strokeLineJoin="round"
+        android:pathData="M 54,28 L 76,37 C 76,60 54,76 54,76 C 54,76 32,60 32,37 Z" />
+    <!-- Safe Car Silhouette -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 46,58 C 47,53 50,52 54,52 C 58,52 61,53 62,58 L 64,62 C 64.5,63 63.5,64 62,64 L 46,64 C 44.5,64 43.5,63 44,62 Z" />
+    <path
+        android:fillColor="#0B132B"
+        android:pathData="M 48,56.5 L 51,53 L 57,53 L 60,56.5 Z" />
+    <!-- Headlights -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M 46,61 A 1.2,1.2 0 1,1 46,63.4 A 1.2,1.2 0 1,1 46,61 M 62,61 A 1.2,1.2 0 1,1 62,63.4 A 1.2,1.2 0 1,1 62,61" />
+    <!-- Road Lane Line -->
+    <path
+        android:strokeColor="#FFD700"
+        android:strokeWidth="1.8"
+        android:fillColor="#00000000"
+        android:pathData="M 54,66 L 54,73" />
+    <!-- AI Star on Top of Shield -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M 54,34 L 55.5,38 L 59.5,38 L 56.2,40.5 L 57.5,44.5 L 54,42 L 50.5,44.5 L 51.8,40.5 L 48.5,38 L 52.5,38 Z" />
+</vector>
