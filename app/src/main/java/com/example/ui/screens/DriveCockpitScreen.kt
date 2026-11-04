@@ -77,13 +77,10 @@ import com.example.ui.components.CarPocketCoinVaultIcon
 import com.example.ui.components.CctvEnforcementMapView
 import com.example.ui.components.CctvRadarCard
 import com.example.ui.components.DrivingHabitTrackerCard
-import com.example.ui.components.LaneDetectionHud
 import com.example.ui.components.ParkingGraceTimerCard
 import com.example.ui.components.QuickDebriefCardOverlay
 import com.example.ui.components.RoadRageCalmOverlay
-import com.example.ui.components.SpeedometerGauge
 import com.example.ui.components.SurroundViewMonitorCluster
-import com.example.ui.components.TurnSignalSeatbeltIndicator
 import com.example.ui.components.VoiceCoachBanner
 import com.example.ui.theme.AmberGlow
 import com.example.ui.theme.AmberWarning
@@ -187,20 +184,7 @@ fun DriveCockpitScreen(
               habitData = state.habitTracker,
               lowHabitAlertMessage = state.lowHabitAlertMessage,
               onMetricClick = { viewModel.speakHabitCoachingTip(it) },
-              onTriggerLowBrakingAlert = { viewModel.triggerLowBrakingHabitAlert() },
-              onTriggerLowAccelAlert = { viewModel.triggerLowAccelerationHabitAlert() },
-              onReplayLowScoreAlert = { viewModel.replayLowHabitScoreAlert() },
               onResetClick = { viewModel.resetHabitScores() }
-            )
-          }
-          item {
-            CctvEnforcementMapView(
-              cameras = cctvCameras,
-              selectedCamera = state.nearestCctv,
-              vehicleCoordinate = state.vehicleCoordinate,
-              isStationary = state.isStationary,
-              onSelectCamera = { viewModel.selectCctvCamera(it) },
-              onOpenFullList = onOpenCctvList
             )
           }
           item {
@@ -215,17 +199,13 @@ fun DriveCockpitScreen(
             }
           }
           item {
-            LaneDetectionHud(
-              laneState = state.laneState,
-              onToggleCamera = { viewModel.toggleCameraMode() },
-              onToggleLaneType = { viewModel.toggleLaneSolidType() },
-              onTriggerDeparture = { side -> viewModel.triggerLaneDepartureAlert(side) }
-            )
-          }
-          item {
-            SimulationTestLabCard(
-              onTrigger = { viewModel.triggerDrivingEvent(it) },
-              onTriggerRoadRage = { viewModel.triggerRoadRageCalmIntervention() }
+            CctvEnforcementMapView(
+              cameras = cctvCameras,
+              selectedCamera = state.nearestCctv,
+              vehicleCoordinate = state.vehicleCoordinate,
+              isStationary = state.isStationary,
+              onSelectCamera = { viewModel.selectCctvCamera(it) },
+              onOpenFullList = onOpenCctvList
             )
           }
         }
@@ -283,20 +263,7 @@ fun DriveCockpitScreen(
             habitData = state.habitTracker,
             lowHabitAlertMessage = state.lowHabitAlertMessage,
             onMetricClick = { viewModel.speakHabitCoachingTip(it) },
-            onTriggerLowBrakingAlert = { viewModel.triggerLowBrakingHabitAlert() },
-            onTriggerLowAccelAlert = { viewModel.triggerLowAccelerationHabitAlert() },
-            onReplayLowScoreAlert = { viewModel.replayLowHabitScoreAlert() },
             onResetClick = { viewModel.resetHabitScores() }
-          )
-        }
-        item {
-          CctvEnforcementMapView(
-            cameras = cctvCameras,
-            selectedCamera = state.nearestCctv,
-            vehicleCoordinate = state.vehicleCoordinate,
-            isStationary = state.isStationary,
-            onSelectCamera = { viewModel.selectCctvCamera(it) },
-            onOpenFullList = onOpenCctvList
           )
         }
         item {
@@ -311,17 +278,13 @@ fun DriveCockpitScreen(
           }
         }
         item {
-          LaneDetectionHud(
-            laneState = state.laneState,
-            onToggleCamera = { viewModel.toggleCameraMode() },
-            onToggleLaneType = { viewModel.toggleLaneSolidType() },
-            onTriggerDeparture = { side -> viewModel.triggerLaneDepartureAlert(side) }
-          )
-        }
-        item {
-          SimulationTestLabCard(
-            onTrigger = { viewModel.triggerDrivingEvent(it) },
-            onTriggerRoadRage = { viewModel.triggerRoadRageCalmIntervention() }
+          CctvEnforcementMapView(
+            cameras = cctvCameras,
+            selectedCamera = state.nearestCctv,
+            vehicleCoordinate = state.vehicleCoordinate,
+            isStationary = state.isStationary,
+            onSelectCamera = { viewModel.selectCctvCamera(it) },
+            onOpenFullList = onOpenCctvList
           )
         }
       }
