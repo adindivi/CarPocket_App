@@ -81,6 +81,7 @@ import com.example.ui.theme.PurpleAccent
 import com.example.ui.theme.TextMuted
 import com.example.ui.theme.TextPrimary
 import com.example.ui.theme.TextSecondary
+import com.example.util.NoFontPaddingTextStyle
 import kotlin.math.roundToInt
 
 /**
@@ -126,7 +127,7 @@ fun CctvEnforcementMapView(
     )
   ) {
     Column(modifier = Modifier.padding(14.dp)) {
-      // 1. Top Header Bar
+      // 1. Top Header Bar (Anti-Squishing 2-Tier Hierarchy)
       Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -151,36 +152,55 @@ fun CctvEnforcementMapView(
             )
           }
           Spacer(modifier = Modifier.width(8.dp))
-          Column {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-              Text(
-                text = "주변 주정차 단속 구역 & CCTV",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = TextPrimary
-              )
-              Spacer(modifier = Modifier.width(6.dp))
+          Column(modifier = Modifier.weight(1f)) {
+            // 1행(타이틀): 가변 제목 (weight + Ellipsis)
+            Text(
+              text = "주변 주정차 단속 구역 & CCTV",
+              fontSize = 15.sp,
+              fontWeight = FontWeight.ExtraBold,
+              color = TextPrimary,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+              style = NoFontPaddingTextStyle
+            )
+            Spacer(modifier = Modifier.height(3.dp))
+            // 2행(메타/태그): [고정 뱃지(softWrap=false)] 및 위치 정보 독립 행 분리
+            Row(
+              verticalAlignment = Alignment.CenterVertically,
+              modifier = Modifier.fillMaxWidth()
+            ) {
               Box(
                 modifier = Modifier
                   .clip(RoundedCornerShape(6.dp))
                   .background(if (isStationary) AmberGlow else EmeraldGlow)
+                  .border(
+                    1.dp,
+                    if (isStationary) AmberWarning.copy(alpha = 0.35f) else EmeraldSafe.copy(alpha = 0.35f),
+                    RoundedCornerShape(6.dp)
+                  )
                   .padding(horizontal = 6.dp, vertical = 2.dp)
               ) {
                 Text(
                   text = if (isStationary) "정차 단속 주의" else "주정차 레이더",
                   fontSize = 10.sp,
                   fontWeight = FontWeight.Bold,
-                  color = if (isStationary) AmberWarning else EmeraldSafe
+                  color = if (isStationary) AmberWarning else EmeraldSafe,
+                  softWrap = false,
+                  maxLines = 1,
+                  style = NoFontPaddingTextStyle
                 )
               }
+              Spacer(modifier = Modifier.width(6.dp))
+              Text(
+                text = "${vehicleCoordinate.addressLabel} (${String.format("%.4f°N, %.4f°E", vehicleCoordinate.latitude, vehicleCoordinate.longitude)})",
+                fontSize = 11.sp,
+                color = TextSecondary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false),
+                style = NoFontPaddingTextStyle
+              )
             }
-            Text(
-              text = "${vehicleCoordinate.addressLabel} (${String.format("%.4f°N, %.4f°E", vehicleCoordinate.latitude, vehicleCoordinate.longitude)})",
-              fontSize = 11.sp,
-              color = TextSecondary,
-              maxLines = 1,
-              overflow = TextOverflow.Ellipsis
-            )
           }
         }
 
@@ -199,7 +219,10 @@ fun CctvEnforcementMapView(
               text = "목록보기 (${cameras.size})",
               fontSize = 11.sp,
               fontWeight = FontWeight.Bold,
-              color = CyanNeon
+              color = CyanNeon,
+              softWrap = false,
+              maxLines = 1,
+              style = NoFontPaddingTextStyle
             )
           }
         }
@@ -469,7 +492,7 @@ private fun CctvMapViewport(
         .border(0.5.dp, Color(0xFFF59E0B), RoundedCornerShape(4.dp))
         .padding(horizontal = 5.dp, vertical = 1.dp)
     ) {
-      Text("올림픽대로", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color(0xFFB45309))
+      Text("올림픽대로", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color(0xFFB45309), softWrap = false, maxLines = 1, style = NoFontPaddingTextStyle)
     }
 
     Box(
@@ -480,7 +503,7 @@ private fun CctvMapViewport(
         .background(Color.White.copy(alpha = 0.88f))
         .padding(horizontal = 5.dp, vertical = 1.dp)
     ) {
-      Text("강남대로", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = TextSecondary)
+      Text("강남대로", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = TextSecondary, softWrap = false, maxLines = 1, style = NoFontPaddingTextStyle)
     }
 
     Box(
@@ -491,7 +514,7 @@ private fun CctvMapViewport(
         .background(Color.White.copy(alpha = 0.88f))
         .padding(horizontal = 5.dp, vertical = 1.dp)
     ) {
-      Text("테헤란로", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = TextSecondary)
+      Text("테헤란로", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = TextSecondary, softWrap = false, maxLines = 1, style = NoFontPaddingTextStyle)
     }
 
     // Current Vehicle Location Marker ("내 차량")
@@ -568,7 +591,10 @@ private fun CctvMapViewport(
         fontSize = 10.sp,
         fontWeight = FontWeight.Bold,
         fontFamily = FontFamily.Monospace,
-        color = TextPrimary
+        color = TextPrimary,
+        softWrap = false,
+        maxLines = 1,
+        style = NoFontPaddingTextStyle
       )
     }
 
@@ -596,7 +622,10 @@ private fun CctvMapViewport(
         text = if (isZoomedIn) "반경 500m" else "반경 1.2km",
         fontSize = 10.sp,
         fontWeight = FontWeight.Bold,
-        color = CyanNeon
+        color = CyanNeon,
+        softWrap = false,
+        maxLines = 1,
+        style = NoFontPaddingTextStyle
       )
     }
 
@@ -664,7 +693,9 @@ private fun CctvPinMarker(
         fontWeight = FontWeight.ExtraBold,
         fontFamily = FontFamily.Monospace,
         color = if (isSelected) Color.White else pinColor,
-        maxLines = 1
+        softWrap = false,
+        maxLines = 1,
+        style = NoFontPaddingTextStyle
       )
     }
 
@@ -689,7 +720,10 @@ private fun CctvPinMarker(
           text = "${camera.speedLimit}",
           fontSize = if (isSelected) 12.sp else 10.sp,
           fontWeight = FontWeight.Black,
-          color = TextPrimary
+          color = TextPrimary,
+          softWrap = false,
+          maxLines = 1,
+          style = NoFontPaddingTextStyle
         )
       } else {
         Icon(
@@ -788,28 +822,33 @@ private fun SelectedCameraDetailPanel(
           Spacer(modifier = Modifier.width(10.dp))
 
           Column(modifier = Modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-              Text(
-                text = camera.title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = TextPrimary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-              )
-            }
+            Text(
+              text = camera.title,
+              fontSize = 14.sp,
+              fontWeight = FontWeight.ExtraBold,
+              color = TextPrimary,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+              style = NoFontPaddingTextStyle
+            )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
               text = "${camera.roadName} · ${camera.type.label} · 전방 ${camera.distanceMeters}m",
               fontSize = 11.sp,
               fontWeight = FontWeight.SemiBold,
-              color = accentColor
+              color = accentColor,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+              style = NoFontPaddingTextStyle
             )
             Text(
               text = "좌표: ${camera.coordinateText}",
               fontSize = 10.sp,
               fontFamily = FontFamily.Monospace,
-              color = TextMuted
+              color = TextMuted,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+              style = NoFontPaddingTextStyle
             )
           }
         }
@@ -839,7 +878,10 @@ private fun SelectedCameraDetailPanel(
               text = "음성안내",
               fontSize = 11.sp,
               fontWeight = FontWeight.Bold,
-              color = CyanNeon
+              color = CyanNeon,
+              softWrap = false,
+              maxLines = 1,
+              style = NoFontPaddingTextStyle
             )
           }
         }
@@ -863,7 +905,10 @@ private fun SelectedCameraDetailPanel(
             text = camera.activeNotice,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            color = if (isStationary) AmberWarning else EmeraldSafe
+            color = if (isStationary) AmberWarning else EmeraldSafe,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = NoFontPaddingTextStyle
           )
           Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -878,7 +923,8 @@ private fun SelectedCameraDetailPanel(
               fontSize = 10.sp,
               color = TextSecondary,
               maxLines = 1,
-              overflow = TextOverflow.Ellipsis
+              overflow = TextOverflow.Ellipsis,
+              style = NoFontPaddingTextStyle
             )
           }
         }
@@ -912,7 +958,10 @@ private fun MapFilterChip(
       text = label,
       fontSize = 11.sp,
       fontWeight = FontWeight.Bold,
-      color = if (isSelected) Color.White else TextSecondary
+      color = if (isSelected) Color.White else TextSecondary,
+      softWrap = false,
+      maxLines = 1,
+      style = NoFontPaddingTextStyle
     )
   }
 }
@@ -931,7 +980,10 @@ private fun LegendDot(color: Color, label: String) {
       text = label,
       fontSize = 9.sp,
       fontWeight = FontWeight.SemiBold,
-      color = TextSecondary
+      color = TextSecondary,
+      softWrap = false,
+      maxLines = 1,
+      style = NoFontPaddingTextStyle
     )
   }
 }
