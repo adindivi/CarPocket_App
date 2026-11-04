@@ -82,6 +82,7 @@ import com.example.ui.components.ParkingGraceTimerCard
 import com.example.ui.components.QuickDebriefCardOverlay
 import com.example.ui.components.RoadRageCalmOverlay
 import com.example.ui.components.SpeedometerGauge
+import com.example.ui.components.SurroundViewMonitorCluster
 import com.example.ui.components.TurnSignalSeatbeltIndicator
 import com.example.ui.components.VoiceCoachBanner
 import com.example.ui.theme.AmberGlow
@@ -145,10 +146,16 @@ fun DriveCockpitScreen(
           }
           item { VoiceCoachBanner(event = state.activeBannerMessage) }
           item {
-            SpeedometerGauge(
+            SurroundViewMonitorCluster(
               speed = state.currentSpeed,
               speedLimit = state.speedLimit,
-              gForce = state.gForce
+              gForce = state.gForce,
+              turnSignal = state.turnSignal,
+              isSeatbeltFastened = state.isSeatbeltFastened,
+              isDriving = state.isDriving,
+              onLeftSignalClick = { viewModel.setTurnSignal(TurnSignal.LEFT) },
+              onRightSignalClick = { viewModel.setTurnSignal(TurnSignal.RIGHT) },
+              onSeatbeltToggle = { viewModel.toggleSeatbelt() }
             )
           }
           item {
@@ -166,15 +173,6 @@ fun DriveCockpitScreen(
               onToggleDrive = {
                 if (state.isDriving) viewModel.stopDriving() else viewModel.startDriving()
               }
-            )
-          }
-          item {
-            TurnSignalSeatbeltIndicator(
-              turnSignal = state.turnSignal,
-              isSeatbeltFastened = state.isSeatbeltFastened,
-              onLeftSignalClick = { viewModel.setTurnSignal(TurnSignal.LEFT) },
-              onRightSignalClick = { viewModel.setTurnSignal(TurnSignal.RIGHT) },
-              onSeatbeltToggle = { viewModel.toggleSeatbelt() }
             )
           }
         }
@@ -251,10 +249,16 @@ fun DriveCockpitScreen(
         }
         item { VoiceCoachBanner(event = state.activeBannerMessage) }
         item {
-          SpeedometerGauge(
+          SurroundViewMonitorCluster(
             speed = state.currentSpeed,
             speedLimit = state.speedLimit,
-            gForce = state.gForce
+            gForce = state.gForce,
+            turnSignal = state.turnSignal,
+            isSeatbeltFastened = state.isSeatbeltFastened,
+            isDriving = state.isDriving,
+            onLeftSignalClick = { viewModel.setTurnSignal(TurnSignal.LEFT) },
+            onRightSignalClick = { viewModel.setTurnSignal(TurnSignal.RIGHT) },
+            onSeatbeltToggle = { viewModel.toggleSeatbelt() }
           )
         }
         item {
@@ -272,15 +276,6 @@ fun DriveCockpitScreen(
             onToggleDrive = {
               if (state.isDriving) viewModel.stopDriving() else viewModel.startDriving()
             }
-          )
-        }
-        item {
-          TurnSignalSeatbeltIndicator(
-            turnSignal = state.turnSignal,
-            isSeatbeltFastened = state.isSeatbeltFastened,
-            onLeftSignalClick = { viewModel.setTurnSignal(TurnSignal.LEFT) },
-            onRightSignalClick = { viewModel.setTurnSignal(TurnSignal.RIGHT) },
-            onSeatbeltToggle = { viewModel.toggleSeatbelt() }
           )
         }
         item {
