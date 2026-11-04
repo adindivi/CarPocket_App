@@ -36,9 +36,9 @@ class GleoAiEngine {
       }
       matchesCameraIntent(q) -> {
         if (nearestCctv != null) {
-          "${nearestCctv.distanceMeters}m 앞에 시속 ${nearestCctv.speedLimit}km ${nearestCctv.type.shortLabel} 단속 카메라가 있어요. 안전속도를 지켜주세요!"
+          "${nearestCctv.distanceMeters}m 앞에 ${nearestCctv.title} (${nearestCctv.type.label}) 구역이 있어요. ${nearestCctv.activeNotice} 안내를 꼭 지켜주세요!"
         } else {
-          "지금 지나가는 경로 주변엔 단속 카메라가 없어요. 편안하고 안전하게 운전하세요!"
+          "현재 주변에 주정차 단속 구역이 없어요. 정차 시에도 5분 유예시간을 확인하고 안전하게 이용하세요!"
         }
       }
       matchesLaneIntent(q) -> {
@@ -51,7 +51,7 @@ class GleoAiEngine {
         "현재 주차장은 2시간 주차 시 1만 2,000원이 나올 예정이에요. 15분 안에 나가면 주차비는 무료예요!"
       }
       else -> {
-        "무엇이든 편하게 물어보세요! 오늘 운전 점수나 단속 카메라, 소모품 교체 시기, 보험료 할인까지 알기 쉽게 알려드릴게요."
+        "무엇이든 편하게 물어보세요! 오늘 운전 점수나 주정차 단속 구역, 소모품 교체 시기, 보험료 할인까지 알기 쉽게 알려드릴게요."
       }
     }
   }

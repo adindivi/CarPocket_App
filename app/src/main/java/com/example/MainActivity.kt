@@ -164,7 +164,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                       Icon(
                         imageVector = Icons.Default.CameraAlt,
-                        contentDescription = "단속 카메라 목록",
+                        contentDescription = "주정차 단속 구역 목록",
                         tint = TextSecondary,
                         modifier = Modifier.size(20.dp)
                       )

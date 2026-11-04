@@ -98,7 +98,7 @@ fun CctvRadarCard(
           }
           Spacer(modifier = Modifier.width(8.dp))
           Text(
-            text = if (isStationary) "정차 중 · 주변 단속 카메라" else "단속 카메라 알림",
+            text = if (isStationary) "정차 중 · 주정차 단속 구역" else "주정차 단속 알림",
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
             color = if (isStationary) AmberWarning else CyanNeon,

@@ -154,7 +154,7 @@ fun CctvEnforcementMapView(
           Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
               Text(
-                text = "주변 단속정보 지도",
+                text = "주변 주정차 단속 구역 & CCTV",
                 fontSize = 15.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = TextPrimary
@@ -167,7 +167,7 @@ fun CctvEnforcementMapView(
                   .padding(horizontal = 6.dp, vertical = 2.dp)
               ) {
                 Text(
-                  text = if (isStationary) "정차 중 안내" else "실시간 레이더",
+                  text = if (isStationary) "정차 단속 주의" else "주정차 레이더",
                   fontSize = 10.sp,
                   fontWeight = FontWeight.Bold,
                   color = if (isStationary) AmberWarning else EmeraldSafe
@@ -214,7 +214,7 @@ fun CctvEnforcementMapView(
       ) {
         item {
           MapFilterChip(
-            label = "전체 단속핀 (${cameras.size})",
+            label = "전체 구역 (${cameras.size})",
             color = CyanNeon,
             isSelected = selectedTypeFilter == null,
             onClick = { selectedTypeFilter = null },
@@ -612,10 +612,10 @@ private fun CctvMapViewport(
       horizontalArrangement = Arrangement.spacedBy(8.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      LegendDot(color = CrimsonAlert, label = "과속·신호")
-      LegendDot(color = AmberWarning, label = "주정차")
-      LegendDot(color = CyanNeon, label = "버스전용")
-      LegendDot(color = PurpleAccent, label = "구간단속")
+      LegendDot(color = AmberWarning, label = "5분 단속")
+      LegendDot(color = CrimsonAlert, label = "12만원(보호구역)")
+      LegendDot(color = CrimsonAlert, label = "견인 주의")
+      LegendDot(color = EmeraldSafe, label = "점심 유예")
     }
   }
 }
@@ -937,8 +937,12 @@ private fun LegendDot(color: Color, label: String) {
 }
 
 fun cameraTypeColor(type: CameraType): Color = when (type) {
-  CameraType.SPEED_SIGNAL -> CrimsonAlert
   CameraType.PARKING_ENFORCEMENT -> AmberWarning
+  CameraType.CHILD_ZONE_PARKING -> CrimsonAlert
+  CameraType.IMMEDIATE_TOW -> CrimsonAlert
+  CameraType.FIRE_HYDRANT -> AmberWarning
+  CameraType.LUNCH_GRACE -> EmeraldSafe
+  CameraType.SPEED_SIGNAL -> CrimsonAlert
   CameraType.BUS_ONLY_LANE -> CyanNeon
   CameraType.SECTION_CONTROL -> PurpleAccent
 }

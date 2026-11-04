@@ -1,6 +1,6 @@
 {
   "name": "카포켓 (CarPocket)",
-  "description": "차량 데이터 분석 기반 실시간 AI 운전 코칭, 안전운전 리포트, 보험 연계 할인, 연비 저금통 및 단속 알림",
+  "description": "차량 데이터 분석 기반 실시간 AI 운전 코칭, 안전운전 리포트, 보험 연계 할인, 연비 저금통 및 주정차 단속 알림",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

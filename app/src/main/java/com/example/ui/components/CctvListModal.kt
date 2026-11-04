@@ -136,7 +136,7 @@ fun CctvListModal(
           Spacer(modifier = Modifier.width(10.dp))
           Column(modifier = Modifier.weight(1f, fill = false)) {
             Text(
-              "주변 단속 CCTV 지도 & 상세 정보",
+              "주변 주정차 단속 구역 & CCTV 목록",
               fontSize = 15.sp,
               fontWeight = FontWeight.Bold,
               color = TextPrimary,
@@ -146,7 +146,7 @@ fun CctvListModal(
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-              "경찰청·지자체 공공데이터 좌표 연동 (${cameras.size}개 지점)",
+              "지자체 불법 주정차 무인단속 연동 (${cameras.size}개 구역)",
               fontSize = 11.sp,
               color = TextSecondary,
               maxLines = 1,

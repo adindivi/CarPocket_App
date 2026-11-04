@@ -214,9 +214,13 @@ data class DriveSession(
 )
 
 enum class CameraType(val label: String, val shortLabel: String) {
+  PARKING_ENFORCEMENT("고정식 주정차", "5분 단속"),
+  CHILD_ZONE_PARKING("어린이보호구역", "12만원"),
+  IMMEDIATE_TOW("즉시견인구역", "견인 주의"),
+  FIRE_HYDRANT("소화전·1분단속", "1분 즉시"),
+  LUNCH_GRACE("점심시간 유예", "점심 허용"),
   SPEED_SIGNAL("과속·신호위반", "과속·신호"),
   SECTION_CONTROL("구간단속", "구간단속"),
-  PARKING_ENFORCEMENT("주정차단속", "주정차"),
   BUS_ONLY_LANE("버스전용차로", "버스전용")
 }
 

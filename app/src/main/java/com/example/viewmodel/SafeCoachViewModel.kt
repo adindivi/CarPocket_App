@@ -298,9 +298,8 @@ class SafeCoachViewModel(application: Application) : AndroidViewModel(applicatio
       )
     }
     if (speakAlert) {
-      val speedText = if (camera.speedLimit > 0) "시속 ${camera.speedLimit}km 제한 " else ""
       audioCoach.speak(
-        "단속 정보 안내: ${camera.title}, 전방 ${camera.distanceMeters}미터 ${speedText}${camera.type.label} 구간입니다. ${camera.activeNotice}"
+        "주정차 단속 안내: ${camera.title}, 전방 ${camera.distanceMeters}미터 ${camera.type.label} 구역입니다. ${camera.activeNotice}"
       )
     }
   }
@@ -431,7 +430,7 @@ class SafeCoachViewModel(application: Application) : AndroidViewModel(applicatio
         if (cctvDist in 180..210) {
           val cam = _cockpitState.value.nearestCctv
           if (cam != null) {
-            audioCoach.speak("전방 200미터 시속 ${cam.speedLimit}km 단속 구간입니다. 현재 속도 ${speed}km입니다.")
+            audioCoach.speak("전방 200미터 ${cam.title} ${cam.type.label} 구역입니다. ${cam.fineNotice}에 주의하세요.")
           }
         }
 
