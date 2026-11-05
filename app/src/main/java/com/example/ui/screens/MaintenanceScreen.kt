@@ -54,8 +54,6 @@ import androidx.compose.ui.unit.sp
 import com.example.model.VehicleConsumable
 import com.example.ui.components.ModernConfirmDialog
 import com.example.ui.components.ModernToastPill
-import com.example.ui.components.ParkingFeeTranslatorCard
-import com.example.ui.components.SmartParkingMemoryCard
 import com.example.ui.theme.AmberGlow
 import com.example.ui.theme.AmberWarning
 import com.example.ui.theme.CrimsonAlert
@@ -100,9 +98,6 @@ fun MaintenanceScreen(
   ) {
     val isWideLayout = maxWidth >= 600.dp
     val horizontalPad = if (maxWidth < 380.dp) 12.dp else 16.dp
-    val parkingMemory by viewModel.parkingMemory.collectAsState()
-    val parkingFeeData by viewModel.parkingFeeData.collectAsState()
-
     if (isWideLayout) {
       // Landscape / Fold / Tablet Responsive 2-Pane Layout
       Row(
@@ -111,7 +106,7 @@ fun MaintenanceScreen(
           .padding(horizontal = horizontalPad),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
       ) {
-        // Left Column: Vehicle Health & Smart Parking Memory
+        // Left Column: Vehicle Health & Specs Overview
         LazyColumn(
           modifier = Modifier.weight(1f),
           contentPadding = PaddingValues(top = 14.dp, bottom = 24.dp),
@@ -123,30 +118,14 @@ fun MaintenanceScreen(
               consumables = consumables
             )
           }
-          item {
-            SmartParkingMemoryCard(
-              parkingMemory = parkingMemory,
-              onScanPillar = { viewModel.scanParkingPillar() },
-              onAskWhereIsMyCar = {
-                viewModel.sendGleoMessage("내 차 어디 있어?")
-              }
-            )
-          }
         }
 
-        // Right Column: Parking Fee Translator & Consumables Inspection List
+        // Right Column: Consumables Inspection & Replacement List
         LazyColumn(
           modifier = Modifier.weight(1.15f),
           contentPadding = PaddingValues(top = 14.dp, bottom = 24.dp),
           verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-          item {
-            ParkingFeeTranslatorCard(
-              feeData = parkingFeeData,
-              onSelectHours = { viewModel.selectParkingHours(it) },
-              onSpeakBriefing = { viewModel.speakParkingFeeBriefing() }
-            )
-          }
           item { ConsumablesSectionHeader() }
           item {
             ConsumablesFilterTab(
@@ -177,22 +156,6 @@ fun MaintenanceScreen(
           VehicleOverviewCard(
             cockpitState = cockpitState,
             consumables = consumables
-          )
-        }
-        item {
-          SmartParkingMemoryCard(
-            parkingMemory = parkingMemory,
-            onScanPillar = { viewModel.scanParkingPillar() },
-            onAskWhereIsMyCar = {
-              viewModel.sendGleoMessage("내 차 어디 있어?")
-            }
-          )
-        }
-        item {
-          ParkingFeeTranslatorCard(
-            feeData = parkingFeeData,
-            onSelectHours = { viewModel.selectParkingHours(it) },
-            onSpeakBriefing = { viewModel.speakParkingFeeBriefing() }
           )
         }
         item { ConsumablesSectionHeader() }

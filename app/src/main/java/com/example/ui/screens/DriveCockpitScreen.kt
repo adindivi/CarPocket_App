@@ -76,10 +76,11 @@ import com.example.model.TurnSignal
 import com.example.ui.components.CarPocketCoinVaultIcon
 import com.example.ui.components.CctvEnforcementMapView
 import com.example.ui.components.CctvRadarCard
-import com.example.ui.components.DrivingHabitTrackerCard
+import com.example.ui.components.ParkingFeeTranslatorCard
 import com.example.ui.components.ParkingGraceTimerCard
 import com.example.ui.components.QuickDebriefCardOverlay
 import com.example.ui.components.RoadRageCalmOverlay
+import com.example.ui.components.SmartParkingMemoryCard
 import com.example.ui.components.SurroundViewMonitorCluster
 import com.example.ui.components.VoiceCoachBanner
 import com.example.ui.theme.AmberGlow
@@ -103,6 +104,12 @@ import com.example.util.toFormattedKm
 import com.example.util.toFormattedPoints
 import com.example.viewmodel.SafeCoachViewModel
 
+enum class SmartParkingTab(val label: String, val tag: String) {
+  ENFORCEMENT_MAP("단속 방어 지도", "tab_parking_enforcement"),
+  PILLAR_MEMORY("내 차 위치 메모", "tab_parking_memory"),
+  FEE_CALCULATOR("주차 요금 계산", "tab_parking_fee")
+}
+
 @Composable
 fun DriveCockpitScreen(
   viewModel: SafeCoachViewModel,
@@ -111,6 +118,10 @@ fun DriveCockpitScreen(
 ) {
   val state by viewModel.cockpitState.collectAsState()
   val cctvCameras by viewModel.cctvCameras.collectAsState()
+  val graceState by viewModel.parkingGraceState.collectAsState()
+  val parkingMemory by viewModel.parkingMemory.collectAsState()
+  val parkingFeeData by viewModel.parkingFeeData.collectAsState()
+  var selectedParkingTab by remember { mutableStateOf(SmartParkingTab.ENFORCEMENT_MAP) }
 
   BoxWithConstraints(
     modifier = modifier
@@ -180,32 +191,25 @@ fun DriveCockpitScreen(
           verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
           item {
-            DrivingHabitTrackerCard(
-              habitData = state.habitTracker,
-              lowHabitAlertMessage = state.lowHabitAlertMessage,
-              onMetricClick = { viewModel.speakHabitCoachingTip(it) },
-              onResetClick = { viewModel.resetHabitScores() }
-            )
-          }
-          item {
-            val graceState by viewModel.parkingGraceState.collectAsState()
-            if (graceState.isTracking) {
-              ParkingGraceTimerCard(
-                graceState = graceState,
-                onMoveVehicleComplete = { viewModel.moveVehicleComplete() },
-                onResetTimer = { viewModel.resetParkingGraceTimer() },
-                onSimulate5MinWarning = { viewModel.simulate5MinParkingWarning() }
-              )
-            }
-          }
-          item {
-            CctvEnforcementMapView(
-              cameras = cctvCameras,
-              selectedCamera = state.nearestCctv,
+            SmartParkingDefenseSection(
+              selectedTab = selectedParkingTab,
+              onSelectTab = { selectedParkingTab = it },
+              cctvCameras = cctvCameras,
+              nearestCctv = state.nearestCctv,
               vehicleCoordinate = state.vehicleCoordinate,
               isStationary = state.isStationary,
-              onSelectCamera = { viewModel.selectCctvCamera(it) },
-              onOpenFullList = onOpenCctvList
+              graceState = graceState,
+              onSelectCctvCamera = { viewModel.selectCctvCamera(it) },
+              onOpenCctvList = onOpenCctvList,
+              onMoveVehicleComplete = { viewModel.moveVehicleComplete() },
+              onResetGraceTimer = { viewModel.resetParkingGraceTimer() },
+              onSimulate5MinWarning = { viewModel.simulate5MinParkingWarning() },
+              parkingMemory = parkingMemory,
+              onScanPillar = { viewModel.scanParkingPillar() },
+              onAskWhereIsMyCar = { viewModel.sendGleoMessage("내 차 어디 있어?") },
+              feeData = parkingFeeData,
+              onSelectHours = { viewModel.selectParkingHours(it) },
+              onSpeakBriefing = { viewModel.speakParkingFeeBriefing() }
             )
           }
         }
@@ -259,32 +263,25 @@ fun DriveCockpitScreen(
           )
         }
         item {
-          DrivingHabitTrackerCard(
-            habitData = state.habitTracker,
-            lowHabitAlertMessage = state.lowHabitAlertMessage,
-            onMetricClick = { viewModel.speakHabitCoachingTip(it) },
-            onResetClick = { viewModel.resetHabitScores() }
-          )
-        }
-        item {
-          val graceState by viewModel.parkingGraceState.collectAsState()
-          if (graceState.isTracking) {
-            ParkingGraceTimerCard(
-              graceState = graceState,
-              onMoveVehicleComplete = { viewModel.moveVehicleComplete() },
-              onResetTimer = { viewModel.resetParkingGraceTimer() },
-              onSimulate5MinWarning = { viewModel.simulate5MinParkingWarning() }
-            )
-          }
-        }
-        item {
-          CctvEnforcementMapView(
-            cameras = cctvCameras,
-            selectedCamera = state.nearestCctv,
+          SmartParkingDefenseSection(
+            selectedTab = selectedParkingTab,
+            onSelectTab = { selectedParkingTab = it },
+            cctvCameras = cctvCameras,
+            nearestCctv = state.nearestCctv,
             vehicleCoordinate = state.vehicleCoordinate,
             isStationary = state.isStationary,
-            onSelectCamera = { viewModel.selectCctvCamera(it) },
-            onOpenFullList = onOpenCctvList
+            graceState = graceState,
+            onSelectCctvCamera = { viewModel.selectCctvCamera(it) },
+            onOpenCctvList = onOpenCctvList,
+            onMoveVehicleComplete = { viewModel.moveVehicleComplete() },
+            onResetGraceTimer = { viewModel.resetParkingGraceTimer() },
+            onSimulate5MinWarning = { viewModel.simulate5MinParkingWarning() },
+            parkingMemory = parkingMemory,
+            onScanPillar = { viewModel.scanParkingPillar() },
+            onAskWhereIsMyCar = { viewModel.sendGleoMessage("내 차 어디 있어?") },
+            feeData = parkingFeeData,
+            onSelectHours = { viewModel.selectParkingHours(it) },
+            onSpeakBriefing = { viewModel.speakParkingFeeBriefing() }
           )
         }
       }
@@ -746,180 +743,106 @@ private fun MasterDriveActionButton(
 }
 
 @Composable
-private fun SimulationTestLabCard(
-  onTrigger: (DrivingEventType) -> Unit,
-  onTriggerRoadRage: () -> Unit
+private fun SmartParkingDefenseSection(
+  selectedTab: SmartParkingTab,
+  onSelectTab: (SmartParkingTab) -> Unit,
+  // Tab 1: Enforcement & Grace
+  cctvCameras: List<com.example.model.EnforcementCamera>,
+  nearestCctv: com.example.model.EnforcementCamera?,
+  vehicleCoordinate: com.example.model.VehicleGpsCoordinate,
+  isStationary: Boolean,
+  graceState: com.example.model.ParkingGracePeriodState,
+  onSelectCctvCamera: (com.example.model.EnforcementCamera) -> Unit,
+  onOpenCctvList: () -> Unit,
+  onMoveVehicleComplete: () -> Unit,
+  onResetGraceTimer: () -> Unit,
+  onSimulate5MinWarning: () -> Unit,
+  // Tab 2: Pillar Memory
+  parkingMemory: com.example.model.ParkingMemoryData,
+  onScanPillar: () -> Unit,
+  onAskWhereIsMyCar: () -> Unit,
+  // Tab 3: Parking Fee
+  feeData: com.example.model.ParkingFeeData,
+  onSelectHours: (Int) -> Unit,
+  onSpeakBriefing: () -> Unit
 ) {
-  var isExpanded by remember { mutableStateOf(false) }
-
-  Surface(
+  Column(
     modifier = Modifier.fillMaxWidth(),
-    shape = RoundedCornerShape(16.dp),
-    color = LightSurface,
-    shadowElevation = 1.dp,
-    border = BorderStroke(1.dp, LightCardBorder)
+    verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
-    Column(modifier = Modifier.padding(14.dp)) {
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .clip(RoundedCornerShape(8.dp))
-          .clickable { isExpanded = !isExpanded },
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        Column(modifier = Modifier.weight(1f, fill = false)) {
-          Text(
-            text = "기능 체험 테스트 랩",
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = TextPrimary,
-            style = NoFontPaddingTextStyle
-          )
-          Spacer(modifier = Modifier.height(2.dp))
-          Text(
-            text = if (isExpanded) "탭하여 접기" else "급조작·연비·감정케어 바로 체험하기",
-            fontSize = 10.sp,
-            color = TextMuted,
-            style = NoFontPaddingTextStyle
-          )
-        }
-
+    // 1. Segmented Control Tab Header (User Rule 3 준수)
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(10.dp))
+        .background(LightSurfaceSubtle)
+        .border(1.dp, LightCardBorder, RoundedCornerShape(10.dp))
+        .padding(3.dp),
+      horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+      SmartParkingTab.entries.forEach { tab ->
+        val isSelected = selectedTab == tab
         Box(
           modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(LightSurfaceSubtle)
-            .border(1.dp, LightCardBorder, RoundedCornerShape(6.dp))
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .weight(1f)
+            .clip(RoundedCornerShape(8.dp))
+            .background(if (isSelected) CyanNeon else Color.Transparent)
+            .clickable { onSelectTab(tab) }
+            .padding(vertical = 8.dp)
+            .testTag(tab.tag),
+          contentAlignment = Alignment.Center
         ) {
           Text(
-            text = if (isExpanded) "접기" else "체험하기",
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Bold,
-            color = CyanNeon,
+            text = tab.label,
+            fontSize = 11.sp,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
+            color = if (isSelected) Color.White else TextSecondary,
+            maxLines = 1,
+            softWrap = false,
             style = NoFontPaddingTextStyle
           )
         }
       }
+    }
 
-      AnimatedVisibility(visible = isExpanded) {
-        Column {
-          Spacer(modifier = Modifier.height(12.dp))
-
-          // 1행: 급조작 & 비용 소모
-          Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-          ) {
-            EventTriggerChip(
-              title = "급출발 (-180원)",
-              color = AmberWarning,
-              bgColor = AmberGlow,
-              onClick = { onTrigger(DrivingEventType.RAPID_ACCEL) },
-              modifier = Modifier.weight(1f)
-            )
-            EventTriggerChip(
-              title = "급제동 (-120원)",
-              color = CrimsonAlert,
-              bgColor = CrimsonGlow,
-              onClick = { onTrigger(DrivingEventType.SUDDEN_BRAKE) },
-              modifier = Modifier.weight(1f)
-            )
-            EventTriggerChip(
-              title = "과속 경고",
-              color = CrimsonAlert,
-              bgColor = CrimsonGlow,
-              onClick = { onTrigger(DrivingEventType.SPEEDING) },
-              modifier = Modifier.weight(1f)
+    // 2. Active Tab Content
+    when (selectedTab) {
+      SmartParkingTab.ENFORCEMENT_MAP -> {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+          if (graceState.isTracking) {
+            ParkingGraceTimerCard(
+              graceState = graceState,
+              onMoveVehicleComplete = onMoveVehicleComplete,
+              onResetTimer = onResetGraceTimer,
+              onSimulate5MinWarning = onSimulate5MinWarning
             )
           }
-
-          Spacer(modifier = Modifier.height(8.dp))
-
-          // 2행: 주행 법규 및 안전거리
-          Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-          ) {
-            EventTriggerChip(
-              title = "깜빡이 미점등",
-              color = AmberWarning,
-              bgColor = AmberGlow,
-              onClick = { onTrigger(DrivingEventType.NO_BLINKER_LANE_CHANGE) },
-              modifier = Modifier.weight(1f)
-            )
-            EventTriggerChip(
-              title = "실선 변경",
-              color = CrimsonAlert,
-              bgColor = CrimsonGlow,
-              onClick = { onTrigger(DrivingEventType.SOLID_LANE_CROSS) },
-              modifier = Modifier.weight(1f)
-            )
-            EventTriggerChip(
-              title = "안전거리 경고",
-              color = AmberWarning,
-              bgColor = AmberGlow,
-              onClick = { onTrigger(DrivingEventType.SAFE_DISTANCE_WARNING) },
-              modifier = Modifier.weight(1f)
-            )
-          }
-
-          Spacer(modifier = Modifier.height(8.dp))
-
-          // 3행: Gleo 실시간 감정 케어 & 보복운전 예방
-          Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-          ) {
-            EventTriggerChip(
-              title = "🧘 3초 진정 코칭 (보복 예방)",
-              color = CyanNeon,
-              bgColor = CyanGlow,
-              onClick = onTriggerRoadRage,
-              modifier = Modifier.weight(1.3f)
-            )
-            EventTriggerChip(
-              title = "🚨 보복운전 연쇄 감지",
-              color = CrimsonAlert,
-              bgColor = CrimsonGlow,
-              onClick = { onTrigger(DrivingEventType.ROAD_RAGE_ALERT) },
-              modifier = Modifier.weight(1f)
-            )
-          }
+          CctvEnforcementMapView(
+            cameras = cctvCameras,
+            selectedCamera = nearestCctv,
+            vehicleCoordinate = vehicleCoordinate,
+            isStationary = isStationary,
+            onSelectCamera = onSelectCctvCamera,
+            onOpenFullList = onOpenCctvList
+          )
         }
+      }
+      SmartParkingTab.PILLAR_MEMORY -> {
+        SmartParkingMemoryCard(
+          parkingMemory = parkingMemory,
+          onScanPillar = onScanPillar,
+          onAskWhereIsMyCar = onAskWhereIsMyCar
+        )
+      }
+      SmartParkingTab.FEE_CALCULATOR -> {
+        ParkingFeeTranslatorCard(
+          feeData = feeData,
+          onSelectHours = onSelectHours,
+          onSpeakBriefing = onSpeakBriefing
+        )
       }
     }
   }
 }
 
-@Composable
-fun EventTriggerChip(
-  title: String,
-  color: Color,
-  bgColor: Color = LightSurfaceSubtle,
-  onClick: () -> Unit,
-  modifier: Modifier = Modifier
-) {
-  Box(
-    modifier = modifier
-      .defaultMinSize(minHeight = 36.dp)
-      .clip(RoundedCornerShape(8.dp))
-      .background(bgColor.copy(alpha = 0.65f))
-      .border(1.dp, color.copy(alpha = 0.45f), RoundedCornerShape(8.dp))
-      .clickable(onClick = onClick)
-      .padding(horizontal = 4.dp, vertical = 7.dp),
-    contentAlignment = Alignment.Center
-  ) {
-    Text(
-      text = title,
-      fontSize = 11.sp,
-      fontWeight = FontWeight.Bold,
-      color = color,
-      softWrap = false,
-      maxLines = 1,
-      style = TextStyle(
-        platformStyle = @Suppress("DEPRECATION") PlatformTextStyle(includeFontPadding = false)
-      )
-    )
-  }
-}
+
