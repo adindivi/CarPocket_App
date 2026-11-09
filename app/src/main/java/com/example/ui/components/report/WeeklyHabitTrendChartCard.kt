@@ -374,21 +374,21 @@ fun WeeklyHabitTrendChartCard(
               horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
               DayHabitMiniPill(
-                label = "부드럽게 멈춤",
+                label = "멈춤",
                 score = selectedRecord.smoothBrakingScore,
-                sub = "급제동 ${selectedRecord.suddenBrakeCount}회",
+                sub = if (selectedRecord.suddenBrakeCount == 0) "급제동 0회" else "급제동 ${selectedRecord.suddenBrakeCount}회",
                 modifier = Modifier.weight(1f)
               )
               DayHabitMiniPill(
-                label = "부드럽게 출발",
+                label = "출발",
                 score = selectedRecord.smoothAccelerationScore,
-                sub = "급출발 ${selectedRecord.rapidAccelCount}회",
+                sub = if (selectedRecord.rapidAccelCount == 0) "급출발 0회" else "급출발 ${selectedRecord.rapidAccelCount}회",
                 modifier = Modifier.weight(1f)
               )
               DayHabitMiniPill(
-                label = "깜빡이 켜기",
+                label = "깜빡이",
                 score = selectedRecord.indicatorUsageScore,
-                sub = "깜빡이 안 켬 ${selectedRecord.missedIndicatorCount}회",
+                sub = if (selectedRecord.missedIndicatorCount == 0) "100% 준수" else "미준수 ${selectedRecord.missedIndicatorCount}회",
                 modifier = Modifier.weight(1f)
               )
             }

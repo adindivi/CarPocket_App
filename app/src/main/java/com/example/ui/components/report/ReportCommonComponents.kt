@@ -175,19 +175,42 @@ fun DayHabitMiniPill(
       .clip(RoundedCornerShape(10.dp))
       .background(LightSurface)
       .border(1.dp, LightCardBorder, RoundedCornerShape(10.dp))
-      .padding(horizontal = 8.dp, vertical = 7.dp)
+      .padding(horizontal = 8.dp, vertical = 6.dp)
   ) {
     Column {
-      Text(label, fontSize = 10.sp, color = TextMuted, maxLines = 1, overflow = TextOverflow.Ellipsis, style = NoFontPaddingTextStyle)
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        Text(
+          text = label,
+          fontSize = 10.sp,
+          color = TextMuted,
+          softWrap = false,
+          maxLines = 1,
+          style = NoFontPaddingTextStyle
+        )
+        Text(
+          text = "${score}점",
+          fontSize = 12.sp,
+          fontWeight = FontWeight.Bold,
+          color = pillColor,
+          fontFamily = FontFamily.Monospace,
+          softWrap = false,
+          maxLines = 1,
+          style = NoFontPaddingTextStyle
+        )
+      }
+      Spacer(modifier = Modifier.height(2.dp))
       Text(
-        text = "${score}점",
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Black,
-        color = pillColor,
-        fontFamily = FontFamily.Monospace,
+        text = sub,
+        fontSize = 9.sp,
+        color = TextSecondary,
+        softWrap = false,
+        maxLines = 1,
         style = NoFontPaddingTextStyle
       )
-      Text(sub, fontSize = 9.sp, color = TextSecondary, maxLines = 1, overflow = TextOverflow.Ellipsis, style = NoFontPaddingTextStyle)
     }
   }
 }

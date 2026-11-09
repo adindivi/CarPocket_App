@@ -136,7 +136,7 @@ fun CctvListModal(
           Spacer(modifier = Modifier.width(10.dp))
           Column(modifier = Modifier.weight(1f, fill = false)) {
             Text(
-              "주변 주정차 단속 구역 & CCTV 목록",
+              "주변 주정차 단속 구역",
               fontSize = 15.sp,
               fontWeight = FontWeight.Bold,
               color = TextPrimary,
@@ -335,10 +335,9 @@ fun CctvDetailItem(
         )
         Spacer(modifier = Modifier.width(3.dp))
         Text(
-          text = "${camera.roadName} · GPS ${camera.coordinateText}",
+          text = camera.roadName,
           fontSize = 11.sp,
           color = TextSecondary,
-          fontFamily = FontFamily.Monospace,
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
           style = TextStyle(

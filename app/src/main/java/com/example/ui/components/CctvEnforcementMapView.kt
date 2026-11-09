@@ -155,7 +155,7 @@ fun CctvEnforcementMapView(
           Column(modifier = Modifier.weight(1f)) {
             // 1행(타이틀): 가변 제목 (weight + Ellipsis)
             Text(
-              text = "주변 주정차 단속 구역 & CCTV",
+              text = "주변 주정차 단속 구역",
               fontSize = 15.sp,
               fontWeight = FontWeight.ExtraBold,
               color = TextPrimary,
@@ -181,7 +181,7 @@ fun CctvEnforcementMapView(
                   .padding(horizontal = 6.dp, vertical = 2.dp)
               ) {
                 Text(
-                  text = if (isStationary) "정차 단속 주의" else "주정차 레이더",
+                  text = if (isStationary) "정차 단속 주의" else "단속 유예 구역",
                   fontSize = 10.sp,
                   fontWeight = FontWeight.Bold,
                   color = if (isStationary) AmberWarning else EmeraldSafe,
@@ -192,7 +192,7 @@ fun CctvEnforcementMapView(
               }
               Spacer(modifier = Modifier.width(6.dp))
               Text(
-                text = "${vehicleCoordinate.addressLabel} (${String.format("%.4f°N, %.4f°E", vehicleCoordinate.latitude, vehicleCoordinate.longitude)})",
+                text = vehicleCoordinate.addressLabel,
                 fontSize = 11.sp,
                 color = TextSecondary,
                 maxLines = 1,
@@ -568,29 +568,28 @@ private fun CctvMapViewport(
       )
     }
 
-    // Top-Left Dummy GPS Coordinate HUD Overlay
+    // Top-Left Operational Status Pill
     Row(
       modifier = Modifier
         .align(Alignment.TopStart)
         .padding(8.dp)
         .clip(RoundedCornerShape(8.dp))
-        .background(Color.White.copy(alpha = 0.92f))
+        .background(Color.White.copy(alpha = 0.94f))
         .border(1.dp, LightCardBorder, RoundedCornerShape(8.dp))
         .padding(horizontal = 8.dp, vertical = 4.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Icon(
-        imageVector = Icons.Default.MyLocation,
-        contentDescription = null,
-        tint = CyanNeon,
-        modifier = Modifier.size(12.dp)
+      Box(
+        modifier = Modifier
+          .size(6.dp)
+          .clip(CircleShape)
+          .background(if (isStationary) AmberWarning else EmeraldSafe)
       )
-      Spacer(modifier = Modifier.width(4.dp))
+      Spacer(modifier = Modifier.width(5.dp))
       Text(
-        text = String.format("GPS %.4f, %.4f", vehicleCoordinate.latitude, vehicleCoordinate.longitude),
+        text = if (isStationary) "단속 위험 감시 중" else "실시간 레이더 정상",
         fontSize = 10.sp,
         fontWeight = FontWeight.Bold,
-        fontFamily = FontFamily.Monospace,
         color = TextPrimary,
         softWrap = false,
         maxLines = 1,
@@ -629,22 +628,28 @@ private fun CctvMapViewport(
       )
     }
 
-    // Bottom-Left Legend Overlay
+    // Bottom-Left Simplified Legend Overlay
     Row(
       modifier = Modifier
         .align(Alignment.BottomStart)
         .padding(8.dp)
         .clip(RoundedCornerShape(8.dp))
-        .background(Color.White.copy(alpha = 0.92f))
+        .background(Color.White.copy(alpha = 0.94f))
         .border(1.dp, LightCardBorder, RoundedCornerShape(8.dp))
         .padding(horizontal = 8.dp, vertical = 4.dp),
       horizontalArrangement = Arrangement.spacedBy(8.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      LegendDot(color = AmberWarning, label = "5분 단속")
-      LegendDot(color = CrimsonAlert, label = "12만원(보호구역)")
-      LegendDot(color = CrimsonAlert, label = "견인 주의")
-      LegendDot(color = EmeraldSafe, label = "점심 유예")
+      LegendDot(color = AmberWarning, label = "5분 유예")
+      LegendDot(color = CrimsonAlert, label = "즉시 단속")
+      Text(
+        text = "· 점심 12~14시 유예",
+        fontSize = 10.sp,
+        color = TextMuted,
+        softWrap = false,
+        maxLines = 1,
+        style = NoFontPaddingTextStyle
+      )
     }
   }
 }
@@ -831,25 +836,33 @@ private fun SelectedCameraDetailPanel(
               overflow = TextOverflow.Ellipsis,
               style = NoFontPaddingTextStyle
             )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-              text = "${camera.roadName} · ${camera.type.label} · 전방 ${camera.distanceMeters}m",
-              fontSize = 11.sp,
-              fontWeight = FontWeight.SemiBold,
-              color = accentColor,
-              maxLines = 1,
-              overflow = TextOverflow.Ellipsis,
-              style = NoFontPaddingTextStyle
-            )
-            Text(
-              text = "좌표: ${camera.coordinateText}",
-              fontSize = 10.sp,
-              fontFamily = FontFamily.Monospace,
-              color = TextMuted,
-              maxLines = 1,
-              overflow = TextOverflow.Ellipsis,
-              style = NoFontPaddingTextStyle
-            )
+            Spacer(modifier = Modifier.height(3.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+              Box(
+                modifier = Modifier
+                  .clip(RoundedCornerShape(4.dp))
+                  .background(accentColor.copy(alpha = 0.15f))
+                  .padding(horizontal = 5.dp, vertical = 1.dp)
+              ) {
+                Text(
+                  text = "전방 ${camera.distanceMeters}m",
+                  fontSize = 10.sp,
+                  fontWeight = FontWeight.Bold,
+                  color = accentColor,
+                  softWrap = false,
+                  style = NoFontPaddingTextStyle
+                )
+              }
+              Spacer(modifier = Modifier.width(6.dp))
+              Text(
+                text = "${camera.roadName} · ${camera.type.shortLabel}",
+                fontSize = 11.sp,
+                color = TextSecondary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = NoFontPaddingTextStyle
+              )
+            }
           }
         }
 
@@ -896,37 +909,29 @@ private fun SelectedCameraDetailPanel(
           .clip(RoundedCornerShape(8.dp))
           .background(Color.White)
           .border(1.dp, LightCardBorder, RoundedCornerShape(8.dp))
-          .padding(horizontal = 10.dp, vertical = 6.dp),
+          .padding(horizontal = 10.dp, vertical = 7.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
       ) {
         Column(modifier = Modifier.weight(1f)) {
           Text(
-            text = camera.activeNotice,
+            text = "5분 초과 주정차 시 무인 자동 단속",
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            color = if (isStationary) AmberWarning else EmeraldSafe,
+            color = if (isStationary) AmberWarning else TextPrimary,
+            softWrap = false,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
             style = NoFontPaddingTextStyle
           )
-          Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-              imageVector = Icons.Default.Info,
-              contentDescription = null,
-              tint = TextSecondary,
-              modifier = Modifier.size(11.dp)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-              text = camera.fineNotice,
-              fontSize = 10.sp,
-              color = TextSecondary,
-              maxLines = 1,
-              overflow = TextOverflow.Ellipsis,
-              style = NoFontPaddingTextStyle
-            )
-          }
+          Spacer(modifier = Modifier.height(2.dp))
+          Text(
+            text = "과태료: 일반 40,000원 · 어린이보호구역 120,000원",
+            fontSize = 10.sp,
+            color = TextSecondary,
+            softWrap = false,
+            maxLines = 1,
+            style = NoFontPaddingTextStyle
+          )
         }
       }
     }
